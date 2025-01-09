@@ -9,7 +9,7 @@ import {
   Users,
 } from "lucide-react";
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 const SIDEBAR_ITEMS = [
@@ -17,7 +17,7 @@ const SIDEBAR_ITEMS = [
     name: "Overview",
     icon: BarChart2,
     color: "#6366f1",
-    path: "/",
+    href: "/",
   },
   { name: "Products", icon: ShoppingBag, color: "#8B5CF6", href: "/products" },
   { name: "Users", icon: Users, color: "#EC4899", href: "/users" },
@@ -47,23 +47,34 @@ const Sidebar = () => {
         </motion.button>
 
         <nav className="mt-8 flex-grow ">
-          {SIDEBAR_ITEMS.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                to={item.href}
-                key={item.href}
-                className="flex items-center p-2 rounded-md hover:bg-gray-700 transition-colors"
-              >
-                <motion.div className="flex items-center p-4 text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors mb-2">
-                  <item.icon
-                    size={20}
-                    style={{ color: item.color, minWidth: "20px" }}
-                  />
-                </motion.div>
-              </Link>
-            );
-          })}
+          {SIDEBAR_ITEMS.map((item) => (
+            <Link
+              to={item.href}
+              key={item.href}
+              className="flex items-center p-2 rounded-md hover:bg-gray-700 transition-colors"
+            >
+              <motion.div className="flex items-center p-4 text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors mb-2">
+                <item.icon
+                  size={20}
+                  style={{ color: item.color, minWidth: "20px" }}
+                />
+
+                <AnimatePresence>
+                  {isSidebarOpen && (
+                    <motion.span
+                      className="ml-4 whitespace-nowrap"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1, width: "auto" }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {item.name}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            </Link>
+          ))}
         </nav>
       </div>
     </motion.div>
